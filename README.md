@@ -125,23 +125,16 @@ In our case it will look like as following :
 `['Garbage','Clean']`
 
 
-#### 5. Visualizing the data 
-To see first 9 images from the training dataset
+### 4. Visualizing the data 
+To see first nice images from the training dataset
 ```python
 plt.figure(figsize=(10,10))
 for images, labels in train_ds.take(1):
-    for i in range(9):
-        ax = plt.subplot(3,3,i+1)
+    for i in range(6):
+        ax = plt.subplot(3,2,i+1)
         plt.imshow(images[i].numpy().astype("uint8"))
         plt.title(class_names[labels[i]])
         plt.axis("off")
-```
-We trained a model using these datasets by passing them to Model.fit in a moment, Using .space function to return a tuple with each index having the number of corresponding elements.
-```python
-for image_batch, labels_batch in train_ds:
-    print(image_batch.shape)
-    print(labels_batch.shape)
-    break
 ```
 
 #### Configuring the dataset for performance
@@ -162,6 +155,34 @@ Here, you will standardize values to be in the [0, 1] range by using `tf.keras.l
 ```python
 normalization_layer = layers.Rescaling(1./255)
 ```
+We applied it to the dataset by calling `Dataset.map` :
+```python
+normalized_ds = train_ds.map(lambda x, y: (normalization_layer(x),y))
+image_batch, labels_batch = next(iter(normalized_ds))
+first_image = image_batch[0]
+print(np.min(first_image), np.max(first_image))
+```
+### 4. Creating the model
+The Sequential model consists of three convolution blocks `tf.keras.layers.Conv2D` with a max pooling layer `tf.keras.layers.MaxPooling2D` in each of them. There's a fully-connected layer `tf.keras.layers.Dense` with 128 units on top of it that is activated by a ReLU activation function `relu`. 
+```python
+num_classes = 5
+
+model = Sequential([
+    layers.Rescaling(1./255, input_shape=(image_height, image_width, 3)),
+    layers.Conv2D(16, 3, padding='same', activation='relu'),
+    layers.MaxPooling2D(),
+    layers.Conv2D(32, 3, padding='same', activation='relu'),
+    layers.MaxPooling2D(),
+    layers.Conv2D(64, 3, padding='same', activation='relu'),
+    layers.MaxPooling2D(),
+    layers.Flatten(),
+    layers.Dense(128, activation='relu'),
+    layers.Dense(num_classes)
+])
+```
+### 5. Compiling the model
+Using `tf.keras.optimizers.Adam` optimizer to implement adam's algorithm and `tf.keras.losses.SparseCategoricalCrossentropy` to compute the crossentropy loss between the labels and predictions. To view training and validation accuracy for each training epoch, passing the metrics argument to Model.compile.
+
 
 
 
