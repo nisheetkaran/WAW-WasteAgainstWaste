@@ -47,6 +47,25 @@ implementation:<br />
 
 The focus of this project is to build a system which takes a live video feed (or multiple mages) and extracts data from the images as to identify places contaminated with waste/litter. We could use gyroscope, accelerometers and proximity sensors from old mobile phones to construct an Arduino based drone. The drone would capture a broad area such as a college campus or a street and provide an aerial view of the location. The drone will be able to transfer the videos/images recorded by it to the local server which is a computer system applying the Machine Learning Algorithms. Arduino will be used for handling the transfer operations which will allow for processing of captured images. GSM and GPS module placed over the drone, which could be extracted from old cellular devices and GPS systems, would provide location of the place to be shared. This data can then be processed using Machine Learning image processing algorithms coded in Python. The dataset would contain images of waste such as waste metal cans, bottles, crumpled paper, plastic bags, cigarettes, etc. We could use old mobile phones directly to monitor public places. We could use solar power generation as it is a renewable source of energy.
 
-# Work flow/ Sequence of Working
+## Work flow/ Sequence of Working
+### How we classified Images Step by Step 
+We have classified images of Waste and Non-waste, First we have created an image classifier using used `tf.keras.Sequential` then we have loaded data using `tf.keras.utils.image_dataset_from_directory`
+#### 1. First and foremost, we will import libraries so that we can use functionalities 
 
- 
+```python
+import matplotlib.pyplot as plt
+import numpy as np
+import os
+import PIL
+import tensorflow as tf
+
+from tensorflow import keras
+from tensorflow.keras import layers
+from tensorflow.keras.models import Sequential
+```
+### 2. Download and explore the dataset
+Our dataset contains around ______ of photos. This dataset contains two directories, one per class: <br />
+`1. Waste\` <br />
+`2. Non-Waste\` <br />
+
+
