@@ -24,13 +24,19 @@ India is getting buried in its own garbage as a huge quantity of waste produced 
 never picked up and pollutes land, air and water. Also, it is evident that we could not stop <br />
 production of waste due to modern world demands. <br />
 ![E-waste](https://image.freepik.com/free-vector/ewaste-banner_106317-3673.jpg)            
-### Simulation How we'll be encountering this. 🦾 ⚙️      
+### Simulation: How we'll be encountering this. 🦾 ⚙️      
 Our project's ultimate goal is to get acknowledged about any waste that is accumulated in <br />
 nearby areas by the means of cameras and sensors of old phones/ E-devices integrated with <br />
 Arduino and GSM technology implemented in a drone or the redundant cell phones themselves,<br />
 using a Machine Learning model that will identify waste materials and will inform nearest <br />
 local authorities about the location of waste. <br />
-[![Watch the video](https://raw.githubusercontent.com/nisheetkaran/Simulation/Thumbnail2/CLick%20HERE.png?token=ASRPDCZQAMF7BBRKPVN2B2DBMGOM4)](https://www.youtube.com/watch?v=MCLqEWsy0A0)<br />
+
+
+https://user-images.githubusercontent.com/77787531/135725554-0ffdb3f8-7047-411d-a907-b351b582b4d3.mp4
+
+
+
+
 The basic idea is to use the products which became redundant with time. Since the production <br />
 of waste is inevitable, we can still try to use redundant items which if not used will be considered<br />
 as electronic-waste. <br />
@@ -134,9 +140,7 @@ for images, labels in train_ds.take(1):
 
 #### Configuring the dataset for performance
 Using buffered prefetching is important as we will be able to yield data from disk without having I/O being blocked. Two important methods we are using to load data are: <br/>
-1)**Dataset.cache** Will help in keeping the images in memory after they're loaded off disk during the first epoch. This will ensure the dataset does not <br/>
-become a gridlock while training our model. If your dataset is too large to fit into memory, you can also use this method to create a performant on-disk <br/>
-cache.<br/>
+1)**Dataset.cache** Will help in keeping the images in memory after they're loaded off disk during the first epoch.  <br /> 
 2)**Dataset.prefetch** Will help in overlaping data preprocessing and model execution while training.<br/>
 
 ```python
@@ -160,8 +164,8 @@ image_batch, labels_batch = next(iter(normalized_ds))
 first_image = image_batch[0]
 print(np.min(first_image), np.max(first_image))
 ```
-### 4. Creating the model
-The Sequential model consists of three convolution blocks `tf.keras.layers.Conv2D` with a max pooling layer `tf.keras.layers.MaxPooling2D` in each of them. There's a fully-connected layer `tf.keras.layers.Dense` with 128 units on top of it that is activated by a ReLU activation function `relu`. 
+### 5. Creating the model
+The Sequential model consists of three convolution blocks `Conv2D` which creates a 2-Dimensional Convolution with a max pooling layer `MaxPooling2D` in each of them. There's a fully-connected layer `Dense` with 128 units on top of it. At last, we flatten the layers by `Flatten`. 
 ```python
 num_classes = 5
 
@@ -178,21 +182,21 @@ model = Sequential([
     layers.Dense(num_classes)
 ])
 ```
-### 5. Compiling the model
-Using `tf.keras.optimizers.Adam` optimizer to implement adam's algorithm and `tf.keras.losses.SparseCategoricalCrossentropy` to compute the crossentropy loss between the labels and predictions. To view training and validation accuracy for each training epoch,we are passing the metrics argument to `Model.compile`.
+### 6. Compiling the model
+Using `Adam` optimizer to implement adam's algorithm which inturn increases efficiency of our model and `SparseCategoricalCrossentropy` to compute the crossentropy loss between the labels and predictions. To view training and validation accuracy for each training epoch, we are passing the metrics argument to `Model.compile`.
 
 ```python
 model.compile(optimizer='adam',
              loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
              metrics=['accuracy'])
 ```
-### 6. Model summary
-It's good to view all the layers of the network using the model's `Model.summary` method, it gives us a clarity and status of models. How many of our total params are Trainable and how many are not.
+### 7. Model summary
+It's good to view all the layers of the network using the model's `Model.summary` method, it gives us a clarity and status of models. How many of our total params are Trainable and how many are not. Also, it shows the output shape after applying layers to the dataset.
 
 ```python
 model.summary()
 ```
-### 7. Training the model
+### 8. Training the model
 
 We already reached adequate amount of accuracy on implementing our algorithm three to four times but, our confidence level/percentage for checking on external test images was low, so increasing number of epocs helped us in reaching the confidence level close to that we wanted our model to have.
 
@@ -204,7 +208,7 @@ history = model.fit(
     epochs=epochs
 )
 ```
-### 8. Visualizing training results
+### 9. Visualizing training results
 Creating plots of **loss** and **accuracy** on the train and validation sets:
 
 ```python
@@ -230,10 +234,33 @@ plt.legend(loc = 'upper right')
 plt.title("Training and Validation Loss")
 plt.show()
 ```
-![ImageGraph](https://raw.githubusercontent.com/nisheetkaran/Simulation/Thumbnail2/FinalGraph.png?token=ASRPDCYEKACCIOZZZ55GXZTBMGTRG) <br/>
-➤ Graphical representation of **Training Accuracy** and **Validation Accuracy**.<br/>
 
-   ![ImageInput](https://raw.githubusercontent.com/nisheetkaran/Simulation/Thumbnail2/Untitled%20(313%20x%20386%20px).png?token=ASRPDC4CL4JLCSCKIQF3FJLBMGP42) <br/>   ➤ This image most likely belongs to **Clean** with a **97.74 percent confidence**.    
+<p align=>
+  <img src="https://raw.githubusercontent.com/nisheetkaran/Simulation/Thumbnail2/FinalGraph.png?token=ASRPDCYEKACCIOZZZ55GXZTBMGTRG" />
+</p>
+➤ Graphical representation of Training Accuracy and Validation Accuracy.<br/>
+
+## Output on Test Images 
+<p align=>
+  <img src="https://github.com/nisheetkaran/Simulation/blob/Thumbnail2/baked.png?raw=true" />
+</p>
+
+<p align=>
+  <img src="https://raw.githubusercontent.com/nisheetkaran/Simulation/Thumbnail2/Garbage%20Input.png?token=ASRPDC67W7BVUHUA2MPF743BMG654" />
+</p> 
+➤ This image most likely belongs to Garbage with a 89.56 percent confidence.
+<p align=>
+  <img src="https://github.com/nisheetkaran/Simulation/blob/Thumbnail2/Untitled%20design%20(1).png?raw=true" />
+</p>
+➤ This image most likely belongs to Clean with a 99.29 percent confidence.
+
+
+
+<div align="center">
+<h1>   Many thank for this opportunity!  
+ </h1>                                                
+
+
 
 
 
