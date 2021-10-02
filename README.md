@@ -30,7 +30,7 @@ nearby areas by the means of cameras and sensors of old phones/ E-devices integr
 Arduino and GSM technology implemented in a drone or the redundant cell phones themselves,<br />
 using a Machine Learning model that will identify waste materials and will inform nearest <br />
 local authorities about the location of waste. <br />
-[![Watch the video](https://github.com/nisheetkaran/Simulation/blob/master/Thumbnaill%20(1).jpg)](https://www.youtube.com/watch?v=MCLqEWsy0A0)<br />
+[![Watch the video](https://raw.githubusercontent.com/nisheetkaran/Simulation/Thumbnail2/CLick%20HERE.png?token=ASRPDCZQAMF7BBRKPVN2B2DBMGOM4)](https://www.youtube.com/watch?v=MCLqEWsy0A0)<br />
 The basic idea is to use the products which became redundant with time. Since the production <br />
 of waste is inevitable, we can still try to use redundant items which if not used will be considered<br />
 as electronic-waste. <br />
@@ -136,6 +136,7 @@ for images, labels in train_ds.take(1):
         plt.title(class_names[labels[i]])
         plt.axis("off")
 ```
+![Visualise](https://raw.githubusercontent.com/nisheetkaran/Simulation/Thumbnail2/output_14_0.png?token=ASRPDCYAIF3MAF2CP32QITLBMGOZ2)
 
 #### Configuring the dataset for performance
 Using buffered prefetching is important as we will be able to yield data from disk without having I/O being blocked. Two important methods we are using to load data are:
