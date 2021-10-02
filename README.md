@@ -22,7 +22,7 @@ The libraries used in project are as follows:<br />
  ### Serious predicament  ➖➕✖️➗<br />
 India is getting buried in its own garbage as a huge quantity of waste produced daily is <br />
 never picked up and pollutes land, air and water. Also, it is evident that we could not stop <br />
-production of waste due to modern world demands.
+production of waste due to modern world demands. <br />
 ![E-waste](https://image.freepik.com/free-vector/ewaste-banner_106317-3673.jpg)            
 ### Simulation How we'll be encountering this. 🦾 ⚙️      
 Our project's ultimate goal is to get acknowledged about any waste that is accumulated in <br />
@@ -105,4 +105,65 @@ train_ds = tf.keras.utils.image_dataset_from_directory(
   image_size=(image_height, image_width),
   batch_size=batch_size)
 ```
+
+```python
+val_ds = tf.keras.utils.image_dataset_from_directory(
+    data_dir,
+    validation_split=0.2,
+    subset="validation",
+    seed=123,
+    image_size=(image_height, image_width),
+    batch_size=batch_size)
+```
+To find the class names in the class_names attribute on these datasets, we can use.
+```python
+class_names = train_ds.class_names
+print(class_names)
+```
+It'll show the names of the directories in alphabhabetical order.
+In our case it will look like as following :
+`['Garbage','Clean']`
+
+
+#### 5. Visualizing the data 
+To see first 9 images from the training dataset
+```python
+plt.figure(figsize=(10,10))
+for images, labels in train_ds.take(1):
+    for i in range(9):
+        ax = plt.subplot(3,3,i+1)
+        plt.imshow(images[i].numpy().astype("uint8"))
+        plt.title(class_names[labels[i]])
+        plt.axis("off")
+```
+We trained a model using these datasets by passing them to Model.fit in a moment, Using .space function to return a tuple with each index having the number of corresponding elements.
+```python
+for image_batch, labels_batch in train_ds:
+    print(image_batch.shape)
+    print(labels_batch.shape)
+    break
+```
+
+#### Configuring the dataset for performance
+Using buffered prefetching is important as we will be able to yield data from disk without having I/O being blocked. Two important methods we are using to load data are:
+1)**Dataset.cache** Will help in keeping the images in memory after they're loaded off disk during the first epoch. This will ensure the dataset does not become a gridlock while training our model. If your dataset is too large to fit into memory, you can also use this method to create a performant on-disk cache.
+2)**Dataset.prefetch** Will help in overlaping data preprocessing and model execution while training.
+
+```python
+AUTOTUNE = tf.data.AUTOTUNE
+
+train_ds = train_ds.cache().shuffle(1000).prefetch(buffer_size=AUTOTUNE)
+val_ds = val_ds.cache().prefetch(buffer_size=AUTOTUNE)
+```
+
+#### Standardizing the data
+The RGB channel values are in the [0, 255] range. This is not ideal for a neural network; in general you should seek to make your input values small.
+Here, you will standardize values to be in the [0, 1] range by using `tf.keras.layers.Rescaling` :
+```python
+normalization_layer = layers.Rescaling(1./255)
+```
+
+
+
+
 
