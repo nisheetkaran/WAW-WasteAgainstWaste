@@ -50,22 +50,59 @@ The focus of this project is to build a system which takes a live video feed (or
 ## Work flow/ Sequence of Working
 ### How we classified Images Step by Step 
 We have classified images of Waste and Non-waste, First we have created an image classifier using used `tf.keras.Sequential` then we have loaded data using `tf.keras.utils.image_dataset_from_directory`
-#### 1. First and foremost, we will import libraries so that we can use functionalities 
+### 1. First and foremost, we will import libraries so that we can use functionalities 
 
 ```python
-import matplotlib.pyplot as plt
 import numpy as np
-import os
+import pandas as pd
 import PIL
+import os
 import tensorflow as tf
-
+import matplotlib.pyplot as plt
+import pathlib
+import glob2
+```
+Now, using sub-libraries of tensorflow.
+```python
 from tensorflow import keras
 from tensorflow.keras import layers
 from tensorflow.keras.models import Sequential
 ```
-### 2. Download and explore the dataset
+### 2. Downloading and ~~exploring~~ the dataset
 Our dataset contains around ______ of photos. This dataset contains two directories, one per class: <br />
-`1. Waste\` <br />
-`2. Non-Waste\` <br />
+`1. Garbage\` <br />
+`2. Clean\` <br />
 
+We are using the dataset which is already available in our device.
+```python
+data_dir = 'F:\WAW-WasteAgainstWaste\data'
+data_dir = pathlib.Path(data_dir)
+```
+We are using the function glob2.glob() directly from glob module to retrieve paths recursively from inside the directories and subdirectoriess.
+```python
+files = glob2.glob('F:\WAW-WasteAgainstWaste\data\*.jpg')
+```
+
+### 3. Loading data using a Keras utility
+
+`tf.keras.utils.image_dataset_from_directory` utility will help us to load images off-disk, Now, We will move from directory of images on disk to `tf.data.Dataset`
+
+#### Creating a dataset
+Defining parametres for the loader.
+```python
+batch_size = 32
+image_height = 180
+image_width = 180
+```
+To ensure our model is trained well (that is, its neither overfitted nor underfitted). We used validation splitting during fine-tuning of our dataset (that too with 80 % for model training and 20 % for validation, that is considered good ratio) 
+
+```python
+train_ds = tf.keras.utils.image_dataset_from_directory(
+  data_dir,
+  validation_split=0.2,
+  subset="training",
+  seed=123,
+  image_size=(image_height, image_width),
+  batch_size=batch_size)
+```
 
