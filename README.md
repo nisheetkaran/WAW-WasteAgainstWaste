@@ -43,14 +43,14 @@ implementation:<br />
 • Cameras from Xbox, PlayStation, etc.<br />
 • Micro-controllers from PCs'.<br />
 
-## Description Of the Project:
+## Description Of the Project: 📝
 
 The focus of this project is to build a system which takes a live video feed (or multiple mages) and extracts data from the images as to identify places contaminated with waste/litter. We could use gyroscope, accelerometers and proximity sensors from old mobile phones to construct an Arduino based drone. The drone would capture a broad area such as a college campus or a street and provide an aerial view of the location. The drone will be able to transfer the videos/images recorded by it to the local server which is a computer system applying the Machine Learning Algorithms. Arduino will be used for handling the transfer operations which will allow for processing of captured images. GSM and GPS module placed over the drone, which could be extracted from old cellular devices and GPS systems, would provide location of the place to be shared. This data can then be processed using Machine Learning image processing algorithms coded in Python. The dataset would contain images of waste such as waste metal cans, bottles, crumpled paper, plastic bags, cigarettes, etc. We could use old mobile phones directly to monitor public places. We could use solar power generation as it is a renewable source of energy.
 
-## Work flow/ Sequence of Working
+## Sequence of Implementations
 ### How we classified Images Step by Step 
 We have classified images of Waste and Non-waste, First we have created an image classifier using used `tf.keras.Sequential` then we have loaded data using `tf.keras.utils.image_dataset_from_directory`
-### 1. First and foremost, we will import libraries so that we can use functionalities 
+### 1. First and foremost, we will import libraries so that we can use functionalities and it will make our work easier.
 
 ```python
 import numpy as np
@@ -181,8 +181,64 @@ model = Sequential([
 ])
 ```
 ### 5. Compiling the model
-Using `tf.keras.optimizers.Adam` optimizer to implement adam's algorithm and `tf.keras.losses.SparseCategoricalCrossentropy` to compute the crossentropy loss between the labels and predictions. To view training and validation accuracy for each training epoch, passing the metrics argument to Model.compile.
+Using `tf.keras.optimizers.Adam` optimizer to implement adam's algorithm and `tf.keras.losses.SparseCategoricalCrossentropy` to compute the crossentropy loss between the labels and predictions. To view training and validation accuracy for each training epoch,we are passing the metrics argument to `Model.compile`.
 
+```python
+model.compile(optimizer='adam',
+             loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
+             metrics=['accuracy'])
+```
+### 6. Model summary
+It's good to view all the layers of the network using the model's `Model.summary` method, it gives us a clarity and status of models. How many of our total params are Trainable and how many are not.
+
+```python
+model.summary()
+```
+### 7. Training the model
+
+We already reached adequate amount of accuracy on implementing our algorithm three to four times but, our confidence level/percentage for checking on external test images was low, so increasing number of epocs helped us in reaching the confidence level close to that we wanted our model to have.
+
+```python
+epochs=10
+history = model.fit(
+    train_ds,
+    validation_data=val_ds,
+    epochs=epochs
+)
+```
+### 8. Visualizing training results
+Creating plots of **loss** and **accuracy** on the train and validation sets:
+
+```python
+acc = history.history['accuracy']
+val_acc = history.history['val_accuracy']
+
+loss = history.history['loss']
+val_loss = history.history['val_loss']
+
+epochs_range = range(epochs)
+
+plt.figure(figsize=(8,8))
+plt.subplot(1,2,1)
+plt.plot(epochs_range, acc, label='Training Accuracy')
+plt.plot(epochs_range, val_acc, label='Validation Accuracy')
+plt.legend(loc='lower right')
+plt.title('Training and Validation Accuracy')
+
+plt.subplot(1,2,2)
+plt.plot(epochs_range, loss, label = 'Training Loss')
+plt.plot(epochs_range, val_loss, label = "Validation Loss")
+plt.legend(loc = 'upper right')
+plt.title("Training and Validation Loss")
+plt.show()
+```
+
+
+
+
+
+        
+    
 
 
 
