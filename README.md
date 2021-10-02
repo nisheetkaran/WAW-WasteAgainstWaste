@@ -68,25 +68,19 @@ from tensorflow import keras
 from tensorflow.keras import layers
 from tensorflow.keras.models import Sequential
 ```
-### 2. Downloading and ~~exploring~~ the dataset
-Our dataset contains around ______ of photos. This dataset contains two directories, one per class: <br />
-`1. Garbage\` <br />
-`2. Clean\` <br />
+### 2. Accessing the dataset
+Our dataset contains around 2800 photos. This dataset contains two directories, one per class: <br />
+`1. Clean\` <br />
+`2. Garbage\` <br />
 
 We are using the dataset which is already available in our device.
 ```python
 data_dir = 'F:\WAW-WasteAgainstWaste\data'
 data_dir = pathlib.Path(data_dir)
 ```
-We are using the function glob2.glob() directly from glob module to retrieve paths recursively from inside the directories and subdirectoriess.
-```python
-files = glob2.glob('F:\WAW-WasteAgainstWaste\data\*.jpg')
-```
-
 ### 3. Loading data using a Keras utility
 
-`tf.keras.utils.image_dataset_from_directory` utility will help us to load images off-disk, Now, We will move from directory of images on disk to `tf.data.Dataset`
-
+`tf.keras.utils.image_dataset_from_directory` utility will help us to generate dataset from given images according to Hyperparametres to further process them. 
 #### Creating a dataset
 Defining parametres for the loader.
 ```python
@@ -115,18 +109,18 @@ val_ds = tf.keras.utils.image_dataset_from_directory(
     image_size=(image_height, image_width),
     batch_size=batch_size)
 ```
-To find the class names in the class_names attribute on these datasets, we can use.
+To check the class names in the class_names attribute on these datasets, we can use.
 ```python
 class_names = train_ds.class_names
 print(class_names)
 ```
 It'll show the names of the directories in alphabhabetical order.
 In our case it will look like as following :
-`['Garbage','Clean']`
+`['Clean','Garbage',]`
 
 
 ### 4. Visualizing the data 
-To see first nice images from the training dataset
+To see first six images from the training dataset
 ```python
 plt.figure(figsize=(10,10))
 for images, labels in train_ds.take(1):
@@ -139,9 +133,11 @@ for images, labels in train_ds.take(1):
 ![Visualise](https://raw.githubusercontent.com/nisheetkaran/Simulation/Thumbnail2/output_14_0.png?token=ASRPDCYAIF3MAF2CP32QITLBMGOZ2)
 
 #### Configuring the dataset for performance
-Using buffered prefetching is important as we will be able to yield data from disk without having I/O being blocked. Two important methods we are using to load data are:
-1)**Dataset.cache** Will help in keeping the images in memory after they're loaded off disk during the first epoch. This will ensure the dataset does not become a gridlock while training our model. If your dataset is too large to fit into memory, you can also use this method to create a performant on-disk cache.
-2)**Dataset.prefetch** Will help in overlaping data preprocessing and model execution while training.
+Using buffered prefetching is important as we will be able to yield data from disk without having I/O being blocked. Two important methods we are using to load data are: <br/>
+1)**Dataset.cache** Will help in keeping the images in memory after they're loaded off disk during the first epoch. This will ensure the dataset does not <br/>
+become a gridlock while training our model. If your dataset is too large to fit into memory, you can also use this method to create a performant on-disk <br/>
+cache.<br/>
+2)**Dataset.prefetch** Will help in overlaping data preprocessing and model execution while training.<br/>
 
 ```python
 AUTOTUNE = tf.data.AUTOTUNE
@@ -151,8 +147,9 @@ val_ds = val_ds.cache().prefetch(buffer_size=AUTOTUNE)
 ```
 
 #### Standardizing the data
-The RGB channel values are in the [0, 255] range. This is not ideal for a neural network; in general you should seek to make your input values small.
-Here, you will standardize values to be in the [0, 1] range by using `tf.keras.layers.Rescaling` :
+RGB channel values are in the [0, 255] range, but for a neural network we desire to make our input values small.<br/>
+That's why we will standardize values to be in the [0, 1] range by using `.Rescaling`: <br/>
+
 ```python
 normalization_layer = layers.Rescaling(1./255)
 ```
@@ -233,13 +230,10 @@ plt.legend(loc = 'upper right')
 plt.title("Training and Validation Loss")
 plt.show()
 ```
+![ImageGraph](https://raw.githubusercontent.com/nisheetkaran/Simulation/Thumbnail2/FinalGraph.png?token=ASRPDCYEKACCIOZZZ55GXZTBMGTRG) <br/>
+➤ Graphical representation of **Training Accuracy** and **Validation Accuracy**.<br/>
 
-
-
-
-
-        
-    
+   ![ImageInput](https://raw.githubusercontent.com/nisheetkaran/Simulation/Thumbnail2/Untitled%20(313%20x%20386%20px).png?token=ASRPDC4CL4JLCSCKIQF3FJLBMGP42) <br/>   ➤ This image most likely belongs to **Clean** with a **97.74 percent confidence**.    
 
 
 
